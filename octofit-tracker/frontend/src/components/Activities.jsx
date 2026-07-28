@@ -1,10 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { fetchResource } from './api.js';
 
 function Activities() {
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const exampleApiUrl = useMemo(() => {
+    const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim();
+    return codespaceName
+      ? `https://${codespaceName}-8000.app.github.dev/api/activities`
+      : 'http://localhost:8000/api/activities';
+  }, []);
 
   useEffect(() => {
     let active = true;
