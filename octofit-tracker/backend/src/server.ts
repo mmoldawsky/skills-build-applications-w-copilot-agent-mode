@@ -8,7 +8,8 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/octofi
 export function getApiBaseUrl(port: number): string {
   const codespaceName = process.env.CODESPACE_NAME?.trim();
   if (codespaceName) {
-    return `https://${codespaceName}-${port}.app.github.dev`;
+    const codespaceUrlSuffix = '-8000.app.github.dev';
+    return `https://${codespaceName}${codespaceUrlSuffix}`;
   }
 
   return `http://localhost:${port}`;
