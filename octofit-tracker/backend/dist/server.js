@@ -10,8 +10,8 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const models_1 = require("./models");
 const PORT = Number(process.env.PORT ?? 8000);
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/octofit_db';
-function getApiUrl(port) {
-    const codespaceName = process.env.CODESPACE_NAME;
+function getApiBaseUrl(port) {
+    const codespaceName = process.env.CODESPACE_NAME?.trim();
     if (codespaceName) {
         return `https://${codespaceName}-${port}.app.github.dev`;
     }
@@ -41,7 +41,7 @@ function createApp() {
         res.json({
             status: 'ok',
             port: PORT,
-            apiUrl: getApiUrl(PORT),
+            apiUrl: getApiBaseUrl(PORT),
         });
     });
     app.get(['/api/users', '/api/users/'], createResourceRoute(async () => {
