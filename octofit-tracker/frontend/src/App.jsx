@@ -1,11 +1,30 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
 
+function getApiBaseUrl() {
+  const configuredUrl = import.meta.env.VITE_API_BASE_URL?.trim()
+  if (configuredUrl) {
+    return configuredUrl.replace(/\/$/, '')
+  }
+
+  const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim() || import.meta.env.CODESPACE_NAME?.trim()
+  if (codespaceName) {
+    return `https://${codespaceName}-8000.app.github.dev`
+  }
+
+  return 'http://localhost:8000'
+}
+
 function App() {
   const [count, setCount] = useState(0)
+  const [apiBaseUrl, setApiBaseUrl] = useState('')
+
+  useEffect(() => {
+    setApiBaseUrl(getApiBaseUrl())
+  }, [])
 
   return (
     <>
@@ -20,6 +39,7 @@ function App() {
           <p>
             Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
           </p>
+          <p>API base URL: {apiBaseUrl || 'Resolving…'}</p>
         </div>
         <button
           type="button"
