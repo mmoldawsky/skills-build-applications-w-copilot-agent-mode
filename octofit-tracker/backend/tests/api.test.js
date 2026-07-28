@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const http = require('node:http');
 const mongoose = require('mongoose');
 
-const { createApp } = require('../dist/server.js');
+const { createApp, getApiBaseUrl } = require('../dist/server.js');
 
 async function get(path) {
   const app = createApp();
@@ -41,6 +41,24 @@ test('health endpoint exposes api metadata', async () => {
   const payload = JSON.parse(response.body);
   assert.equal(payload.status, 'ok');
   assert.ok(payload.apiUrl);
+});
+
+test('getApiBaseUrl uses Codespaces URLs when available and localhost otherwise', () => {
+  const previousCodespaceName = process.env.CODESPACE_NAME;
+
+  try {
+    delete process.env.CODESPACE_NAME;
+    assert.equal(getApiBaseUrl(8000), 'http://localhost:8000');
+
+    process.env.CODESPACE_NAME = 'octofit-demo';
+    assert.equal(getApiBaseUrl(8000), 'https://octofit-demo-8000.app.github.dev');
+  } finally {
+    if (previousCodespaceName === undefined) {
+      delete process.env.CODESPACE_NAME;
+    } else {
+      process.env.CODESPACE_NAME = previousCodespaceName;
+    }
+  }
 });
 
 test('resource endpoints return arrays', async () => {

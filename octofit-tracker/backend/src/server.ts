@@ -5,7 +5,7 @@ import { Activity, LeaderboardEntry, Team, User, Workout } from './models';
 const PORT = Number(process.env.PORT ?? 8000);
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/octofit_db';
 
-function getApiBaseUrl(port: number): string {
+export function getApiBaseUrl(port: number): string {
   const codespaceName = process.env.CODESPACE_NAME?.trim();
   if (codespaceName) {
     return `https://${codespaceName}-${port}.app.github.dev`;
